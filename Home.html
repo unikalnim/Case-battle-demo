@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Case Battle — Demo</title>
+  <style>
+    :root { --sidebar-width: 182px; }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: #fff;
+      background: #1b1f27;
+      font-family: Arial, sans-serif;
+    }
+
+    /* ===== ЛЕВАЯ ПАНЕЛЬ ===== */
+    header {
+      position: fixed;
+      width: var(--sidebar-width);
+      height: 100vh;
+      background: #13171f;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow: hidden;
+      z-index: 1000;
+    }
+
+    header img.logo {
+      height: 62px;
+      display: inline-block;
+      margin-top: 4px;
+    }
+
+    .waterfall {
+      width: 100%;
+      height: calc(100vh - 130px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 10px;
+    }
+
+    /* ===== ВЕРХНЯЯ ШАПКА ===== */
+    .topbar {
+      position: relative;
+      background: #13171f;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start; /* сдвиг иконок к левому краю */
+      padding: 0 25px;
+      gap: 50px; /* расстояние между иконками */
+      margin-left: var(--sidebar-width);
+      z-index: 10;
+    }
+
+    .balance {
+      font-size: 18px;
+      font-weight: 600;
+      color: #fff;
+      margin-left: auto;
+    }
+
+    .balance span {
+      color: #f07a3f;
+    }
+
+    .topbar-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: #ffffff;
+      transition: transform 0.2s ease, filter 0.2s ease;
+    }
+
+    .topbar-item img {
+      width: 30px;
+      height: 30px;
+    }
+
+    .topbar-item span {
+      font-size: 11px;
+      margin-top: 5px;
+    }
+
+    .topbar-item:hover {
+      transform: translateY(-2px);
+      filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.4));
+    }
+
+    .topbar-item:hover span {
+      color: #f07a3f;
+    }
+
+    main {
+      margin-left: calc(var(--sidebar-width));
+      padding: 20px;
+    }
+
+    @media (max-width: 600px) {
+      header { display: none; }
+      main { margin-left: 0; }
+      .topbar {
+        margin-left: 0;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <img src="Screenshot (5).png" alt="logo" class="logo">
+    <div class="waterfall" id="waterfall"></div>
+  </header>
+
+  <div class="topbar">
+    <a href="upgrade.html" class="topbar-item">
+      <img src="upgrade-icon.svg" alt="Апгрейд">
+      <span>АПГРЕЙД</span>
+    </a>
+    <a href="contract.html" class="topbar-item">
+      <img src="contract-icon.svg" alt="Контракт">
+      <span>КОНТРАКТ</span>
+    </a>
+    <a href="giveaway.html" class="topbar-item">
+      <img src="giveaway-icon.svg" alt="Розыгрыш">
+      <span>РОЗЫГРЫШ</span>
+    </a>
+    <a href="tournament.html" class="topbar-item">
+      <img src="medal.svg" alt="Турнир">
+      <span>ТУРНИР</span>
+    </a>
+    <div class="balance">Баланс: <span id="balanceValue">0</span> $</div>
+  </div>
+
+  <main>
+    <!-- Содержимое страницы -->
+  </main>
+
+  <script>
+    const balanceValue = document.getElementById('balanceValue');
+
+    async function loadBalance() {
+      try {
+        const res = await fetch('/account');
+        if (res.status === 401) {
+          balanceValue.textContent = 'Войдите';
+          return;
+        }
+        if (!res.ok) {
+          balanceValue.textContent = 'Ошибка';
+          return;
+        }
+        const data = await res.json();
+        balanceValue.textContent = data.balance.toFixed(2);
+      } catch (e) {
+        balanceValue.textContent = 'Ошибка сети';
+      }
+    }
+
+    loadBalance();
+  </script>
+
+</body>
+</html>
